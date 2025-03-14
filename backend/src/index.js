@@ -1,6 +1,11 @@
 import express from "express";
 import cors from "cors";
 
+import { Mongo } from "./database/mongo.js";
+import { config } from "dotenv";
+
+config();
+
 async function main() {
   const hostname = "localhost";
   const port = 3000;
@@ -9,6 +14,14 @@ async function main() {
 
   app.use(cors());
   app.use(express.json());
+
+  // DB CONECTION
+  const mongoConnection = await Mongo.connect({
+    mongoConnectionString: process.env.MONGO_CS,
+    mongoDbName: process.env.MONGO_DB_NAME,
+  });
+
+  console.log(mongoConnection);
 
   app.get("/", (req, res) => {
     res.send({
